@@ -51,15 +51,6 @@ def get_embedding_model():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
 @st.cache_resource(show_spinner=False)
-def build_index(kb, embed_model):
-    texts = [d["text"] for d in kb]
-    embs = embed_model.encode(texts, convert_to_numpy=True)
-    d = embs.shape[1]
-    index = faiss.IndexFlatL2(d)
-    index.add(embs)
-    return index, embs
-
-@st.cache_resource(show_spinner=False)
 def get_generator():
     model_name = "google/flan-t5-small"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -68,8 +59,19 @@ def get_generator():
     return gen
 
 embed_model = get_embedding_model()
-index, kb_embeddings = build_index(KB, embed_model)
 generator = get_generator()
+
+# --- Build index (FIXED CACHE) ---
+@st.cache_resource(show_spinner=False)
+def build_index(texts, embed_model):
+    embs = embed_model.encode(texts, convert_to_numpy=True)
+    d = embs.shape[1]
+    index = faiss.IndexFlatL2(d)
+    index.add(embs)
+    return index, embs
+
+texts = [d["text"] for d in KB]
+index, kb_embeddings = build_index(texts, embed_model)
 
 # --- Retrieval & Generation ---
 def retrieve(query, k=3):
@@ -112,7 +114,6 @@ if submitted and q.strip():
         except Exception:
             q_en, user_lang = q, "en"
 
-        # assume same lang for back translation
         user_lang = "en" if q == q_en else "hi" if any(c in q for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
 
         docs = retrieve(q_en, k=3)
