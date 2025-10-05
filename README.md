@@ -59,40 +59,6 @@ project/
 
 ## 🚀 Running Locally
 
-### 1. Clone the repo
-```bash
-git clone <repo-url>
-cd project
-
-
-2. Install dependencies
-pip install -r requirements.txt
-
-3. Run Streamlit app
-streamlit run streamlit_app_text_only.py
-
-
-🌐 Deployment Options
-1. Streamlit Cloud (Recommended for Demo)
-
-Upload this repo to GitHub
-
-Go to https://share.streamlit.io
-
-Deploy directly from GitHub
-
-App runs free with text-only mode
-
-2. Hugging Face Spaces (Full Demo with Audio)
-
-Create a new Space on Hugging Face
-
-Select Streamlit as SDK
-
-Upload all project files
-
-App will support voice input + TTS answers
-
 🧩 Example Queries
 🏠 Tenancy / Housing
 
@@ -201,16 +167,42 @@ University: Punjabi University, Patiala
 Focus Areas: AI, ML, Deep Learning, RAG, LLMs, Neural Networks
 
 Goal: Build a real problem-solving project for citizens
+### 1. Clone the repo
+```bash
+git clone <repo-url>
+cd project
+
+
+2. Install dependencies
+pip install -r requirements.txt
+
+3. Run Streamlit app
+streamlit run streamlit_app_text_only.py
+
+
+🌐 Deployment Options
+1. Streamlit Cloud (Recommended for Demo)
+
+Upload this repo to GitHub
+
+Go to https://share.streamlit.io
+
+Deploy directly from GitHub
+
+App runs free with text-only mode
+
+2. Hugging Face Spaces (Full Demo with Audio)
+
+Create a new Space on Hugging Face
+
+Select Streamlit as SDK
+
+Upload all project files
+
+App will support voice input + TTS answers
 
 
 
----
 
-✅ Copy-paste this into `README.md` in your repo — it’s complete, clean, and formatted for GitHub.  
 
-Do you also want me to create a **professional PPTX (PowerPoint)** version of this README for your **project presentation**?
 
-## Notes
-- The FLAN-T5-small generator is used for demo; quality is moderate. Replace generator with API-backed LLM for production quality.
-- Audio transcription (Whisper) may not be available on Streamlit Cloud; use Text mode if ASR fails.
-- This project is educational and informational only — not legal advice.
