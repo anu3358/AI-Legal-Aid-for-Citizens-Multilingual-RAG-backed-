@@ -78,12 +78,18 @@ def generate_answer(query, contexts, user_lang="en"):
     User question: {query}
 
     Answer instructions:
-    1. Explain the law in 2–3 sentences.
-    2. Provide a single clear step-by-step list (no repetition).
-    3. Mention helpline numbers or official websites if available.
-    4. If unsure, say 'Please consult a lawyer or legal aid service.'
+    - Start with a short 2–3 sentence plain explanation of the law.
+    - Then give a numbered step-by-step list of clear actions (at least 3 steps).
+    - Mention helpline numbers or official websites if available.
+    - If unsure, say 'Please consult a lawyer or legal aid service.'
+    Ensure the answer is complete, not just "1." — always give full sentences.
     """)
-    out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"]
+    out = generator(
+        prompt,
+        max_length=350,
+        min_length=80,
+        do_sample=False
+    )[0]["generated_text"]
 
     if user_lang != "en":
         try:
