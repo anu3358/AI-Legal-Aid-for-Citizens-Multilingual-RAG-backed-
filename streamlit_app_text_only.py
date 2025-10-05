@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 import json, os, textwrap
 
 st.set_page_config(page_title="Nyāy Buddy — Legal Aid (Text Demo)", layout="wide",
@@ -17,7 +17,6 @@ st.markdown("""
 .header h1{color: #fff; margin:0; font-size:30px;}
 .card {background:#ffffff; padding:12px; border-radius:8px; box-shadow: 0 2px 6px rgba(15,23,42,0.08);}
 .source {font-size:12px; color:#444; background:#f3f4f6; padding:8px; border-radius:6px;}
-.user-bubble {background:#e6f4ea; padding:10px; border-radius:10px; display:inline-block;}
 .bot-bubble {background:#f1f5f9; padding:10px; border-radius:10px; display:inline-block;}
 .small {font-size:13px; color:#666;}
 </style>
@@ -71,7 +70,6 @@ def get_generator():
 embed_model = get_embedding_model()
 index, kb_embeddings = build_index(KB, embed_model)
 generator = get_generator()
-translator = Translator()
 
 # --- Retrieval & Generation ---
 def retrieve(query, k=3):
@@ -94,42 +92,36 @@ def generate_answer(query, contexts, user_lang="en"):
     Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
     """)
     out = generator(prompt, max_length=200, do_sample=False)[0]["generated_text"]
+
     if user_lang != "en":
         try:
-            return translator.translate(out, dest=user_lang).text
+            return GoogleTranslator(source="en", target=user_lang).translate(out)
         except Exception:
             return out
     return out
 
-# --- Chat-like UI ---
+# --- UI ---
 st.markdown("## Ask Nyāy Buddy")
 with st.form("ask"):
     q = st.text_area("Type your question (Hindi / Punjabi / English)", height=120)
     submitted = st.form_submit_button("Ask")
 if submitted and q.strip():
     with st.spinner("Thinking..."):
-        # detect language & translate for retrieval
         try:
-            detected = translator.detect(q)
-            user_lang = detected.lang
+            q_en = GoogleTranslator(source="auto", target="en").translate(q)
         except Exception:
-            user_lang = "en"
-        q_en = q if user_lang == "en" else translator.translate(q, dest="en").text
+            q_en, user_lang = q, "en"
 
-        # retrieve and show sources
+        # assume same lang for back translation
+        user_lang = "en" if q == q_en else "hi" if any(c in q for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
+
         docs = retrieve(q_en, k=3)
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("### 🔎 Sources retrieved")
+        st.markdown("<div class='card'>### 🔎 Sources retrieved</div>", unsafe_allow_html=True)
         for d in docs:
             st.markdown(f"**{d['title']}** — <span class='small'>{d['source']}</span>", unsafe_allow_html=True)
             st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
-        # generate answer
         ans = generate_answer(q_en, docs, user_lang=user_lang)
-        st.markdown("<br/>")
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown("### 🗨️ Nyāy Buddy (Simple Answer)")
+        st.markdown('<div class="card">### 🗨️ Nyāy Buddy Answer</div>', unsafe_allow_html=True)
         st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.info("Disclaimer: This is informational only. Consult a qualified lawyer for representation.")
+        st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
