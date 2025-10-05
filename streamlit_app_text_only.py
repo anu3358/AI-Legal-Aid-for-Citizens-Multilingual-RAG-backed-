@@ -45,11 +45,7 @@ if not os.path.exists(KB_PATH):
 with open(KB_PATH, "r", encoding="utf-8") as f:
     KB = json.load(f)
 
-# --- Models (cached) ---
-@st.cache_resource(show_spinner=False)
-def get_embedding_model():
-    return SentenceTransformer("all-MiniLM-L6-v2")
-
+# --- Generator (cached) ---
 @st.cache_resource(show_spinner=False)
 def get_generator():
     model_name = "google/flan-t5-small"
@@ -58,20 +54,20 @@ def get_generator():
     gen = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=-1)
     return gen
 
-embed_model = get_embedding_model()
 generator = get_generator()
 
-# --- Build index (FIXED CACHE) ---
+# --- Build index (embedder inside cache to avoid unhashable param error) ---
 @st.cache_resource(show_spinner=False)
-def build_index(texts, embed_model):
-    embs = embed_model.encode(texts, convert_to_numpy=True)
+def build_index(texts):
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    embs = model.encode(texts, convert_to_numpy=True)
     d = embs.shape[1]
     index = faiss.IndexFlatL2(d)
     index.add(embs)
-    return index, embs
+    return index, embs, model
 
 texts = [d["text"] for d in KB]
-index, kb_embeddings = build_index(texts, embed_model)
+index, kb_embeddings, embed_model = build_index(texts)
 
 # --- Retrieval & Generation ---
 def retrieve(query, k=3):
