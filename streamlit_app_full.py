@@ -44,7 +44,7 @@ def get_generator():
 
 generator = get_generator()
 
-# --- Build index (embedder inside cache) ---
+# --- Build index ---
 @st.cache_resource(show_spinner=False)
 def build_index(texts):
     model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -77,7 +77,14 @@ def generate_answer(query, contexts, user_lang="en"):
 
     Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
     """)
-    out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"]
+
+    try:
+        out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"].strip()
+    except Exception:
+        out = ""
+
+    if not out:
+        out = "Please consult a lawyer or legal aid. I could not find a clear answer."
 
     if user_lang != "en":
         try:
@@ -87,11 +94,12 @@ def generate_answer(query, contexts, user_lang="en"):
     return out
 
 def tts_bytes(text, lang='en'):
+    if not text or not text.strip():
+        return None  # avoid sending empty text to gTTS
     try:
         tts = gTTS(text=text, lang=lang)
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tf:
             tts.save(tf.name)
-            tf.flush()
             with open(tf.name, "rb") as f:
                 data = f.read()
         os.remove(tf.name)
@@ -132,50 +140,3 @@ if mode == "Text":
                 st.audio(audio, format='audio/mp3')
 
             st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
-
-else:
-    st.info("Upload a short audio file (wav/mp3). We attempt transcription with Whisper (transformers) if available.")
-    audio_file = st.file_uploader("Upload audio", type=['wav','mp3','m4a','ogg'])
-    if audio_file is not None:
-        with st.spinner("Transcribing audio..."):
-            tmp = os.path.join(tempfile.gettempdir(), f"upload_{uuid.uuid4().hex}.wav")
-            with open(tmp, "wb") as f:
-                f.write(audio_file.read())
-            query_text = ""
-            try:
-                from transformers import pipeline as hf_pipeline
-                asr = hf_pipeline("automatic-speech-recognition", model="openai/whisper-small")
-                asr_out = asr(tmp)
-                query_text = asr_out.get("text", "")
-            except Exception as e:
-                st.warning("Whisper ASR unavailable: " + str(e))
-
-            if query_text:
-                st.write("Transcribed text:")
-                st.write(query_text)
-
-                try:
-                    q_en = GoogleTranslator(source="auto", target="en").translate(query_text)
-                except Exception:
-                    q_en, user_lang = query_text, "en"
-
-                user_lang = "en" if query_text == q_en else "hi" if any(c in query_text for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
-
-                docs = retrieve(q_en, k=3)
-                st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
-                for d in docs:
-                    st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
-                    st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
-
-                ans = generate_answer(q_en, docs, user_lang=user_lang)
-                st.markdown('<div class="card"><h3>🗨️ Nyāy Buddy Answer</h3></div>', unsafe_allow_html=True)
-                st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
-
-                lang_code = 'hi' if user_lang == 'hi' else ('pa' if user_lang == 'pa' else 'en')
-                audio = tts_bytes(ans, lang=lang_code)
-                if audio:
-                    st.audio(audio, format='audio/mp3')
-
-                st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
-            else:
-                st.error("Transcription failed. Try again or use Text mode.")
