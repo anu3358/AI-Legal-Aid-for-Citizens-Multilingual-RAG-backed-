@@ -1,7 +1,4 @@
 # streamlit_app_full.py
-# Nyāy Buddy — Full Streamlit demo (Text + Audio upload, RAG + LLM, TTS)
-# Usage: streamlit run streamlit_app_full.py
-
 import streamlit as st
 from sentence_transformers import SentenceTransformer
 import faiss
@@ -9,54 +6,60 @@ import numpy as np
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from googletrans import Translator
 from gtts import gTTS
-import tempfile, os, uuid, json
+import tempfile, os, uuid, json, textwrap
 
-st.set_page_config(page_title="Nyāy Buddy — Full Demo", layout="centered")
+st.set_page_config(page_title="Nyāy Buddy — Full Demo", layout="wide", initial_sidebar_state="collapsed")
 
+st.markdown("""
+<style>
+.header {background: linear-gradient(90deg,#053e57,#0f172a); padding:14px; border-radius:8px;}
+.header h1{color: #fff; margin:0; font-size:26px;}
+.card {background:#ffffff; padding:12px; border-radius:8px; box-shadow: 0 2px 6px rgba(15,23,42,0.06);}
+.source {font-size:12px; color:#444; background:#f3f4f6; padding:8px; border-radius:6px;}
+.bot-bubble {background:#f1f5f9; padding:10px; border-radius:10px; display:inline-block;}
+small{font-size:13px; color:#666;}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="header"><h1>⚖️ Nyāy Buddy — Full Demo (Text + Audio)</h1></div>', unsafe_allow_html=True)
+st.write("")
+
+# Load KB
 KB_PATH = "kb.json"
+if not os.path.exists(KB_PATH):
+    st.error("kb.json not found. Please upload your KB file named kb.json in the project root.")
+    st.stop()
+
 with open(KB_PATH, "r", encoding="utf-8") as f:
     KB = json.load(f)
 
 @st.cache_resource(show_spinner=False)
-def load_embedding_model():
+def get_embedding_model():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
 @st.cache_resource(show_spinner=False)
-def build_faiss_index(kb, embed_model):
+def build_index(kb, embed_model):
     texts = [d["text"] for d in kb]
-    embeddings = embed_model.encode(texts, convert_to_numpy=True)
-    d = embeddings.shape[1]
+    embs = embed_model.encode(texts, convert_to_numpy=True)
+    d = embs.shape[1]
     index = faiss.IndexFlatL2(d)
-    index.add(embeddings)
-    return index, embeddings
+    index.add(embs)
+    return index, embs
 
 @st.cache_resource(show_spinner=False)
-def load_generator():
+def get_generator():
     model_name = "google/flan-t5-small"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     gen = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=-1)
     return gen
 
-def tts_play(text, lang='en'):
-    try:
-        tts = gTTS(text=text, lang=lang)
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as tf:
-            tts.save(tf.name)
-            tf.flush()
-            with open(tf.name, 'rb') as f:
-                data = f.read()
-        os.remove(tf.name)
-        return data
-    except Exception as e:
-        st.warning('TTS failed: ' + str(e))
-        return None
+embed_model = get_embedding_model()
+index, kb_embeddings = build_index(KB, embed_model)
+generator = get_generator()
+translator = Translator()
 
-def load_kb(path="kb.json"):
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def retrieve_top_k(query, k=3):
+def retrieve(query, k=3):
     q_emb = embed_model.encode([query], convert_to_numpy=True)
     D, I = index.search(q_emb, k)
     results = []
@@ -65,111 +68,106 @@ def retrieve_top_k(query, k=3):
             results.append(KB[idx])
     return results
 
-def generate_answer(query, context_passages, user_lang='en'):
-    contexts = "\\n\\n".join([f"Source: {p['source']}\\nText: {p['text']}" for p in context_passages])
-    prompt = (
-        "You are an assistant that explains Indian legal texts in simple language for a common person.\\n\\n"
-        f"Context documents:\\n{contexts}\\n\\n"
-        f"User question: {query}\\n\\n"
-        "Task: Give a short plain-language answer (2-6 sentences) summarizing the relevant law, "
-        "what actions the user can take (step-by-step), and cite the source titles. "
-        "If unsure, say 'Please consult a lawyer or legal aid'. Keep answer concise."
-    )
-    out = generator(prompt, max_length=256, do_sample=False)[0]['generated_text']
-    if user_lang != 'en':
+def generate_answer(query, contexts, user_lang="en"):
+    contexts_txt = "\n\n".join([f"Source: {c['source']}\nText: {c['text']}" for c in contexts])
+    prompt = textwrap.dedent(f"""You are an assistant that explains Indian legal texts in simple, short sentences for a common person.
+    Context documents:
+    {contexts_txt}
+
+    User question: {query}
+
+    Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
+    """)
+    out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"]
+    if user_lang != "en":
         try:
-            trans = translator.translate(out, dest=user_lang).text
-            return trans
+            return translator.translate(out, dest=user_lang).text
         except Exception:
             return out
     return out
 
-# Initialize models
-KB = load_kb(KB_PATH)
-embed_model = load_embedding_model()
-index, kb_embeddings = build_faiss_index(KB, embed_model)
-generator = load_generator()
-translator = Translator()
+def tts_bytes(text, lang='en'):
+    try:
+        tts = gTTS(text=text, lang=lang)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tf:
+            tts.save(tf.name)
+            tf.flush()
+            with open(tf.name, "rb") as f:
+                data = f.read()
+        os.remove(tf.name)
+        return data
+    except Exception as e:
+        st.warning("TTS error: " + str(e))
+        return None
 
-st.title("Nyāy Buddy — Full Demo (Text + Audio)")
-st.markdown("Ask in text or upload a short audio file (wav/mp3). The system will transcribe and answer based on the KB.")
-
+# UI
 mode = st.radio("Mode", ("Text", "Audio upload"))
 
 if mode == "Text":
-    with st.form("form_text"):
-        q = st.text_area("Type your legal question:", height=140)
-        submitted = st.form_submit_button("Ask")
+    with st.form("text_form"):
+        q = st.text_area("Type your legal question (Hindi/Punjabi/English)", height=140)
+        submitted = st.form_submit_button("Ask Nyāy Buddy")
     if submitted and q.strip():
         with st.spinner("Processing..."):
             try:
                 detected = translator.detect(q)
                 user_lang = detected.lang
-            except Exception:
-                user_lang = 'en'
-            if user_lang != 'en':
-                try:
-                    q_en = translator.translate(q, dest='en').text
-                except:
-                    q_en = q
-            else:
-                q_en = q
-            top_docs = retrieve_top_k(q_en, k=3)
-            st.subheader("Sources retrieved:")
-            for d in top_docs:
-                st.write(f\"**{d['title']}** — {d['source']}\")
-                st.caption(d['text'])
-            answer = generate_answer(q_en, top_docs, user_lang=user_lang)
-            st.subheader("Nyāy Buddy Answer:")
-            st.write(answer)
-            tts_lang = 'hi' if user_lang.startswith('hi') else ('pa' if user_lang.startswith('pa') else 'en')
-            audio_bytes = tts_play(answer, lang=tts_lang)
-            if audio_bytes:
-                st.audio(audio_bytes, format='audio/mp3')
-            st.info('Disclaimer: Informational only. Consult a lawyer.')
+            except:
+                user_lang = "en"
+            q_en = q if user_lang == "en" else translator.translate(q, dest="en").text
+            docs = retrieve(q_en, k=3)
+            st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
+            for d in docs:
+                st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
+                st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
+            ans = generate_answer(q_en, docs, user_lang=user_lang)
+            st.markdown('<div class="card"><h3>🗨️ Nyāy Buddy Answer</h3></div>', unsafe_allow_html=True)
+            st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
+            # TTS
+            lang_code = 'hi' if user_lang.startswith('hi') else ('pa' if user_lang.startswith('pa') else 'en')
+            audio = tts_bytes(ans, lang=lang_code)
+            if audio:
+                st.audio(audio, format='audio/mp3')
+            st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
+
 else:
-    st.info('Upload audio (wav/mp3). We try to transcribe using Whisper (if available).')
-    audio_file = st.file_uploader('Upload audio file', type=['wav','mp3','m4a','ogg'])
+    st.info("Upload a short audio file (wav/mp3). We attempt transcription with Whisper (transformers) if available.")
+    audio_file = st.file_uploader("Upload audio", type=['wav','mp3','m4a','ogg'])
     if audio_file is not None:
-        with st.spinner('Transcribing...'):
-            tmp_path = os.path.join(tempfile.gettempdir(), f\"upload_{uuid.uuid4().hex}.wav\")
-            with open(tmp_path, 'wb') as f:
+        with st.spinner("Transcribing audio..."):
+            tmp = os.path.join(tempfile.gettempdir(), f"upload_{uuid.uuid4().hex}.wav")
+            with open(tmp, "wb") as f:
                 f.write(audio_file.read())
+            query_text = ""
             try:
                 from transformers import pipeline as hf_pipeline
-                asr = hf_pipeline('automatic-speech-recognition', model='openai/whisper-small')
-                asr_out = asr(tmp_path)
-                query_text = asr_out.get('text', '')
+                asr = hf_pipeline("automatic-speech-recognition", model="openai/whisper-small")
+                asr_out = asr(tmp)
+                query_text = asr_out.get("text", "")
             except Exception as e:
-                st.warning('Transcription unavailable: please use Text mode.')
-                query_text = ''
+                st.warning("Whisper ASR unavailable in this environment: " + str(e))
             if query_text:
-                st.write('Transcribed text:')
+                st.write("Transcribed text:")
                 st.write(query_text)
                 try:
                     detected = translator.detect(query_text)
                     user_lang = detected.lang
-                except Exception:
-                    user_lang = 'en'
-                if user_lang != 'en':
-                    try:
-                        q_en = translator.translate(query_text, dest='en').text
-                    except:
-                        q_en = query_text
-                else:
-                    q_en = query_text
-                top_docs = retrieve_top_k(q_en, k=3)
-                st.subheader('Sources retrieved:')
-                for d in top_docs:
-                    st.write(f\"**{d['title']}** — {d['source']}\")
-                    st.caption(d['text'])
-                answer = generate_answer(q_en, top_docs, user_lang=user_lang)
-                st.subheader('Nyāy Buddy Answer:')
-                st.write(answer)
-                tts_lang = 'hi' if user_lang.startswith('hi') else ('pa' if user_lang.startswith('pa') else 'en')
-                audio_bytes = tts_play(answer, lang=tts_lang)
-                if audio_bytes:
-                    st.audio(audio_bytes, format='audio/mp3')
-                st.info('Disclaimer: Informational only. Consult a lawyer.')
+                except:
+                    user_lang = "en"
+                q_en = query_text if user_lang == "en" else translator.translate(query_text, dest='en').text
+                docs = retrieve(q_en, k=3)
+                st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
+                for d in docs:
+                    st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
+                    st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
+                ans = generate_answer(q_en, docs, user_lang=user_lang)
+                st.markdown('<div class="card"><h3>🗨️ Nyāy Buddy Answer</h3></div>', unsafe_allow_html=True)
+                st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
+                # TTS playback
+                lang_code = 'hi' if user_lang.startswith('hi') else ('pa' if user_lang.startswith('pa') else 'en')
+                audio = tts_bytes(ans, lang=lang_code)
+                if audio:
+                    st.audio(audio, format='audio/mp3')
+                st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
             else:
-                st.error('Transcription failed. Please try again or switch to Text mode.')
+                st.error("Transcription failed. Try again or use Text mode.")
