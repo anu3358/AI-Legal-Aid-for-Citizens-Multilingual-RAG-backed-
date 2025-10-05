@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from gtts import gTTS
 import tempfile, os, uuid, json, textwrap
 
@@ -57,7 +57,6 @@ def get_generator():
 embed_model = get_embedding_model()
 index, kb_embeddings = build_index(KB, embed_model)
 generator = get_generator()
-translator = Translator()
 
 def retrieve(query, k=3):
     q_emb = embed_model.encode([query], convert_to_numpy=True)
@@ -79,9 +78,10 @@ def generate_answer(query, contexts, user_lang="en"):
     Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
     """)
     out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"]
+
     if user_lang != "en":
         try:
-            return translator.translate(out, dest=user_lang).text
+            return GoogleTranslator(source="en", target=user_lang).translate(out)
         except Exception:
             return out
     return out
@@ -100,7 +100,7 @@ def tts_bytes(text, lang='en'):
         st.warning("TTS error: " + str(e))
         return None
 
-# UI
+# --- UI ---
 mode = st.radio("Mode", ("Text", "Audio upload"))
 
 if mode == "Text":
@@ -110,24 +110,27 @@ if mode == "Text":
     if submitted and q.strip():
         with st.spinner("Processing..."):
             try:
-                detected = translator.detect(q)
-                user_lang = detected.lang
-            except:
-                user_lang = "en"
-            q_en = q if user_lang == "en" else translator.translate(q, dest="en").text
+                q_en = GoogleTranslator(source="auto", target="en").translate(q)
+            except Exception:
+                q_en, user_lang = q, "en"
+
+            user_lang = "en" if q == q_en else "hi" if any(c in q for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
+
             docs = retrieve(q_en, k=3)
             st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
             for d in docs:
                 st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
                 st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
+
             ans = generate_answer(q_en, docs, user_lang=user_lang)
             st.markdown('<div class="card"><h3>🗨️ Nyāy Buddy Answer</h3></div>', unsafe_allow_html=True)
             st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
-            # TTS
-            lang_code = 'hi' if user_lang.startswith('hi') else ('pa' if user_lang.startswith('pa') else 'en')
+
+            lang_code = 'hi' if user_lang == 'hi' else ('pa' if user_lang == 'pa' else 'en')
             audio = tts_bytes(ans, lang=lang_code)
             if audio:
                 st.audio(audio, format='audio/mp3')
+
             st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
 
 else:
@@ -145,29 +148,34 @@ else:
                 asr_out = asr(tmp)
                 query_text = asr_out.get("text", "")
             except Exception as e:
-                st.warning("Whisper ASR unavailable in this environment: " + str(e))
+                st.warning("Whisper ASR unavailable: " + str(e))
+
             if query_text:
                 st.write("Transcribed text:")
                 st.write(query_text)
+
                 try:
-                    detected = translator.detect(query_text)
-                    user_lang = detected.lang
-                except:
-                    user_lang = "en"
-                q_en = query_text if user_lang == "en" else translator.translate(query_text, dest='en').text
+                    q_en = GoogleTranslator(source="auto", target="en").translate(query_text)
+                except Exception:
+                    q_en, user_lang = query_text, "en"
+
+                user_lang = "en" if query_text == q_en else "hi" if any(c in query_text for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
+
                 docs = retrieve(q_en, k=3)
                 st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
                 for d in docs:
                     st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
                     st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
+
                 ans = generate_answer(q_en, docs, user_lang=user_lang)
                 st.markdown('<div class="card"><h3>🗨️ Nyāy Buddy Answer</h3></div>', unsafe_allow_html=True)
                 st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
-                # TTS playback
-                lang_code = 'hi' if user_lang.startswith('hi') else ('pa' if user_lang.startswith('pa') else 'en')
+
+                lang_code = 'hi' if user_lang == 'hi' else ('pa' if user_lang == 'pa' else 'en')
                 audio = tts_bytes(ans, lang=lang_code)
                 if audio:
                     st.audio(audio, format='audio/mp3')
+
                 st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
             else:
                 st.error("Transcription failed. Try again or use Text mode.")
