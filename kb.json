@@ -1,75 +1,72 @@
 [
   {
-    "title": "Tenant Deposit Rights (General)",
-    "source": "Common Tenancy Practices - Civil Guidance",
-    "text": "Tenants are entitled to receive their security deposit back if there is no damage beyond normal wear and tear. Steps: (1) Request the landlord for deposit refund in writing, (2) Ask for an itemized deduction list if any money is withheld, (3) If not resolved, file a complaint at the local Rent Controller office. Emergency: Police Helpline 100."
+    "title": "Tenant Deposit Rights",
+    "source": "Rent Control Laws & Civil Guidance",
+    "text": "Tenants are legally entitled to a refund of their security deposit if there is no damage beyond normal wear and tear. Steps: (1) Send a written request to the landlord for refund, (2) Ask for an itemized list of deductions if money is withheld, (3) If unresolved, file a complaint at the local Rent Controller office. Helpline: Police 100."
   },
   {
-  "title": "Consumer Right - Refund for Defective Goods",
-  "source": "Consumer Protection Act, 2019",
-  "text": "If you receive defective goods, you can: (1) Contact the seller/shop and request replacement or refund, (2) Keep the invoice and proof of purchase safe, (3) If unresolved, file a complaint at the District Consumer Forum, (4) Call the National Consumer Helpline 1800-11-4000 or file online at consumerhelpline.gov.in."
+    "title": "Consumer Protection - Refund for Defective Goods",
+    "source": "Consumer Protection Act, 2019",
+    "text": "Consumers have the right to refund or replacement for defective goods. Steps: (1) Contact the seller with proof of purchase, (2) If unresolved, file a complaint at the District Consumer Forum, (3) Call National Consumer Helpline 1800-11-4000 or file online at https://consumerhelpline.gov.in. Example case: Consumer Forum has ordered refunds for defective mobile phones sold online."
   },
-
   {
-  "title": "Cyber Fraud - Online Banking Scam",
-  "source": "Information Technology Act, 2000",
-  "text": "Online fraud is a punishable offence under the IT Act. Steps: (1) Call National Cybercrime Helpline 1930 immediately, (2) File complaint on cybercrime.gov.in, (3) Lodge FIR at nearest police station or cyber cell, (4) Keep SMS, bank statements, and transaction details as evidence."
+    "title": "Cyber Fraud - UPI/Online Banking Scam",
+    "source": "Information Technology Act, 2000",
+    "text": "Cyber fraud involving UPI or online banking is punishable under IT Act, 2000 and IPC. Steps: (1) Call your bank helpline to freeze the account, (2) Report fraud at Cyber Helpline 1930 or https://cybercrime.gov.in, (3) File FIR at nearest police station or cyber cell, (4) Preserve SMS, transaction logs, and bank statements as evidence. Helpline: 1930 (Cyber Helpline)."
   },
-
   {
-    "title": "Delayed Salary - Labour Law",
+    "title": "Delayed Salary Complaint",
     "source": "Payment of Wages Act, 1936",
-    "text": "Employees must receive wages before 7th or 10th of the next month. Steps: (1) Write complaint to employer in writing/email, (2) If unresolved, file a claim with Labour Commissioner, (3) Approach Labour Court for legal remedy. Helpline: 155214."
+    "text": "Employees must be paid by the 7th or 10th of the following month. Steps: (1) Send a formal written complaint to the employer, (2) Approach the Labour Commissioner if unresolved, (3) File claim before Labour Court for legal remedy. Helpline: Labour Helpline 155214."
   },
   {
     "title": "Minimum Wages Protection",
     "source": "Minimum Wages Act, 1948",
-    "text": "Every worker must be paid at least the government-declared minimum wage. Steps: (1) Check state notification for rates, (2) If underpaid, approach Labour Commissioner, (3) Call Labour Helpline 155214 for assistance."
+    "text": "All workers must receive at least the government-declared minimum wage. Steps: (1) Verify state minimum wage notification, (2) If underpaid, file a complaint with the Labour Commissioner, (3) Call Labour Helpline 155214 for support. Example case: Workers recovered pending wages through Labour Court under Minimum Wages Act."
   },
   {
-    "title": "Right to Information",
+    "title": "Right to Information (RTI)",
     "source": "RTI Act, 2005",
-    "text": "Any citizen may seek information from government offices. Steps: (1) Draft a simple RTI application (mention name, address, question, Rs. 10 fee), (2) Send to Public Information Officer of department, (3) If no reply within 30 days, appeal to First Appellate Authority. Online portal: rtionline.gov.in."
+    "text": "Every citizen has the right to request information from government authorities. Steps: (1) Draft RTI with name, address, query, and Rs. 10 fee, (2) Submit to Public Information Officer (PIO) of the concerned department, (3) If no reply within 30 days, appeal to First Appellate Authority. Website: https://rtionline.gov.in."
   },
   {
     "title": "Domestic Violence Protection",
     "source": "Protection of Women from Domestic Violence Act, 2005",
-    "text": "Victims can get legal and police protection. Steps: (1) Call Women Helpline 181 or Police 100, (2) Approach Protection Officer/District Legal Services Authority, (3) File complaint in Magistrate Court for protection, residence, or monetary relief. Free legal aid available."
+    "text": "Victims of domestic violence can seek immediate police and legal protection. Steps: (1) Call Women Helpline 181 or Police 100, (2) Approach Protection Officer or District Legal Services Authority, (3) File complaint in Magistrate Court for protection, residence, or monetary relief. Free legal aid is available. Helpline: Women Helpline 181."
   },
   {
     "title": "Dowry Harassment",
-    "source": "Dowry Prohibition Act, 1961",
-    "text": "Dowry harassment is a crime. Steps: (1) Call Police Women Helpline 1091, (2) File FIR under Dowry Act and Section 498A IPC, (3) Seek help from District Women’s Cell or NCW helpline 7827170170."
+    "source": "Dowry Prohibition Act, 1961 & IPC 498A",
+    "text": "Demanding dowry and harassment is a criminal offence. Steps: (1) Call Police Women Helpline 1091, (2) File FIR under Dowry Prohibition Act & IPC 498A, (3) Approach District Women’s Cell or National Commission for Women Helpline 7827170170. Example case: Courts have convicted in-laws for dowry-related harassment under Section 498A IPC."
   },
   {
     "title": "Marriage and Divorce",
     "source": "Hindu Marriage Act, 1955",
-    "text": "Either spouse may file for divorce. Steps: (1) Collect marriage proof and ID, (2) File petition in Family Court citing grounds (mutual consent, cruelty, desertion etc.), (3) Attend hearings, (4) Court grants decree. Legal Aid Helpline: 1516."
+    "text": "Either spouse can file for divorce under mutual consent or specific grounds. Steps: (1) Collect marriage certificate and ID proofs, (2) File petition in Family Court under mutual consent, cruelty, or desertion grounds, (3) Attend hearings, (4) Court issues decree. Helpline: Legal Aid Helpline 1516."
   },
   {
-    "title": "Child Labour",
+    "title": "Child Labour Prohibition",
     "source": "Child Labour (Prohibition and Regulation) Act, 1986",
-    "text": "Child labour under 14 in hazardous work is illegal. Steps: (1) Report case immediately to Childline 1098, (2) Inform District Labour Office, (3) Rescue and rehabilitation arranged by authorities."
+    "text": "Employment of children under 14 in hazardous jobs is illegal. Steps: (1) Report immediately to Childline 1098, (2) Inform District Labour Office, (3) Authorities arrange rescue and rehabilitation. Helpline: Childline 1098."
   },
   {
     "title": "Workplace Sexual Harassment",
     "source": "POSH Act, 2013",
-    "text": "Sexual harassment at workplace is illegal. Steps: (1) File complaint with Internal Complaints Committee within 3 months, (2) If no ICC, complain to District Officer, (3) Call Women Helpline 181 for immediate support."
+    "text": "Sexual harassment at workplace is unlawful under POSH Act. Steps: (1) File complaint with Internal Complaints Committee (ICC) within 3 months, (2) If ICC not available, complain to District Officer, (3) Call Women Helpline 181 for immediate support. Helpline: 181."
   },
   {
-  "title": "SC/ST Atrocities Protection",
-  "source": "SC/ST (Prevention of Atrocities) Act, 1989",
-  "text": "Any insult, humiliation, or violence against Scheduled Caste or Scheduled Tribe persons on the basis of caste is a serious criminal offence. Steps: (1) Go to the nearest police station and file an FIR clearly mentioning it is under the SC/ST Act, (2) Contact SC/ST Helpline 1800-1800-214, (3) District Legal Services Authority will provide free legal aid. Example: In 'State vs Accused (2015)', compensation was awarded to the victim of caste-based abuse."
+    "title": "SC/ST Atrocities Protection",
+    "source": "SC/ST (Prevention of Atrocities) Act, 1989",
+    "text": "Caste-based insult, humiliation, or violence is a criminal offence under SC/ST Act. Steps: (1) File FIR at nearest police station under SC/ST Act, (2) Call SC/ST Helpline 1800-1800-214, (3) Approach District Legal Services Authority for free legal aid. Example case: In 2015, compensation was granted to a victim of caste-based abuse under SC/ST Act."
   },
-
   {
     "title": "Lok Adalat - Free Dispute Resolution",
     "source": "Legal Services Authorities Act, 1987",
-    "text": "Lok Adalat provides free settlement of disputes like family, property, and cheque bounce cases. Steps: (1) Approach District/State Legal Services Authority, (2) Submit dispute details, (3) Attend Lok Adalat session for compromise, (4) Award is final and binding. Legal Aid Helpline: 1516."
+    "text": "Lok Adalats provide quick, free resolution of disputes like family, property, and cheque bounce cases. Steps: (1) Approach District/State Legal Services Authority, (2) Submit dispute details, (3) Attend Lok Adalat session, (4) Accept binding award. Helpline: Legal Aid 1516."
   },
   {
     "title": "Emergency Helplines (India)",
     "source": "Government of India",
-    "text": "Police 100 | Ambulance 108 | Fire 101 | Women Helpline 181 | Childline 1098 | Cybercrime 1930 | Consumer 1800-11-4000 | Labour 155214 | Legal Aid 1516 | SC/ST 1800-1800-214."
+    "text": "National emergency helplines for immediate support. Police 100 | Ambulance 108 | Fire 101 | Women 181 | Childline 1098 | Cybercrime 1930 | Consumer 1800-11-4000 | Labour 155214 | Legal Aid 1516 | SC/ST 1800-1800-214."
   }
 ]
