@@ -7,6 +7,7 @@ import os
 from transformers import pipeline
 from deep_translator import GoogleTranslator
 from gtts import gTTS
+from sentence_transformers import SentenceTransformer
 
 # ---------------------------
 # Load Knowledge Base
@@ -21,8 +22,6 @@ KB = load_kb()
 # ---------------------------
 # Embedding + FAISS Index
 # ---------------------------
-from sentence_transformers import SentenceTransformer
-
 @st.cache_resource
 def build_index(texts, embed_model):
     embeddings = embed_model.encode(texts, convert_to_tensor=False, normalize_embeddings=True)
@@ -154,7 +153,7 @@ if mode == "Text":
         # Optional TTS
         if st.checkbox("🔊 Listen Answer (gTTS)"):
             try:
-                tts = gTTS(answer_out, lang="hi")  # auto lang detection may fail, forcing Hindi
+                tts = gTTS(answer_out, lang="hi")  # forcing Hindi for demo
                 tts.save("answer.mp3")
                 audio_file = open("answer.mp3", "rb")
                 st.audio(audio_file.read(), format="audio/mp3")
