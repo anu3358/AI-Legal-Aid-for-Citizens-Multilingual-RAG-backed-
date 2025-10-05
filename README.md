@@ -19,7 +19,7 @@ It uses **Retrieval-Augmented Generation (RAG)** with legal documents + AI model
 
 ## 🔗 Live Demo
 Check out the live deployed app here:  
-👉 [Nyāy Buddy Demo (Text-only)](https://nbewp2cytifnsycswqdnfi.streamlit.app/)
+👉 [Nyāy Buddy Demo ](https://nbewp2cytifnsycswqdnfi.streamlit.app/)
 
 ---
 
