@@ -2,56 +2,71 @@
   {
     "title": "Tenant Deposit Rights (General)",
     "source": "Common Tenancy Practices - Civil Guidance",
-    "text": "A tenant is generally entitled to the refund of the security deposit at the end of tenancy if there is no damage beyond normal wear and tear. Landlords should provide an itemized deduction statement if they withhold any amount."
+    "text": "A tenant is entitled to the refund of the security deposit at the end of tenancy if there is no damage beyond normal wear and tear. Landlords must provide an itemized deduction statement if they withhold any amount. For tenancy disputes, approach the local Rent Controller office."
   },
   {
     "title": "Consumer Right - Refund for Defective Goods",
     "source": "Consumer Protection Act - FAQ",
-    "text": "If a product is found defective, the consumer has a right to seek replacement or refund under the Consumer Protection Act. They may approach the district consumer forum with evidence and purchase proof."
+    "text": "If a product is found defective, the consumer has a right to seek replacement or refund under the Consumer Protection Act. They may approach the district consumer forum with evidence and purchase proof. National Consumer Helpline: 1800-11-4000."
   },
   {
     "title": "IT Act - Cyber Fraud Guidance",
     "source": "Information Technology Act - Guidance",
-    "text": "Unauthorized access or fraudulent transactions using computers or mobile devices may constitute offences under the Information Technology Act. Victims should retain transaction logs and file an FIR at the nearest police station and a complaint with the cyber cell."
+    "text": "Fraudulent transactions using computers or mobile devices may constitute offences under the IT Act. Victims should retain transaction logs and file an FIR at the nearest police station and a complaint with the cyber cell. National Cyber Crime Helpline: 1930."
   },
   {
     "title": "Delayed Salary - Labour Law",
     "source": "Payment of Wages Act, 1936",
-    "text": "Every employer must pay wages on time, usually before the 7th or 10th of the following month depending on establishment size. If salary is not paid, employees can file a claim with the Labour Commissioner or approach the Labour Court."
+    "text": "Employers must pay wages on time, before the 7th or 10th of the following month depending on establishment size. If salary is not paid, employees can file a claim with the Labour Commissioner or approach the Labour Court. Labour Helpline: 155214."
   },
   {
     "title": "Minimum Wages",
     "source": "Minimum Wages Act, 1948",
-    "text": "Workers are entitled to receive wages not less than the minimum rates fixed by the government. Complaints about underpayment can be filed with the Labour Commissioner."
+    "text": "Workers are entitled to wages not less than government-fixed minimum rates. Complaints about underpayment can be filed with the Labour Commissioner. Labour Helpline: 155214."
   },
   {
     "title": "Right to Information",
     "source": "RTI Act, 2005",
-    "text": "Any citizen of India may file an RTI application to seek information from government departments. Applications can be made in writing, online, or through postal services, and departments must respond within 30 days."
+    "text": "Any citizen may file an RTI application to seek information from government departments. Applications can be submitted in writing, online, or via post, and departments must respond within 30 days. RTI Online Portal: https://rtionline.gov.in/"
   },
   {
     "title": "Domestic Violence Protection",
     "source": "Protection of Women from Domestic Violence Act, 2005",
-    "text": "Victims of domestic violence can seek protection orders, residence orders, and monetary relief by approaching the Magistrate. Free legal aid is available through District Legal Services Authorities."
+    "text": "Victims of domestic violence can seek protection orders, residence orders, and monetary relief by approaching the Magistrate. Free legal aid is available through District Legal Services Authorities. Women Helpline (24x7): 181."
   },
   {
     "title": "Dowry Prohibition",
     "source": "Dowry Prohibition Act, 1961",
-    "text": "Giving or taking dowry is a punishable offence. Complaints can be made to the police or Women’s Cell. Dowry harassment cases may also be filed under Section 498A IPC."
+    "text": "Giving or taking dowry is a punishable offence. Complaints can be made to the police or Women’s Cell. Dowry harassment may also be prosecuted under Section 498A IPC. Police Women Helpline: 1091."
   },
   {
     "title": "Marriage and Divorce",
     "source": "Hindu Marriage Act, 1955",
-    "text": "Either spouse may file for divorce on grounds such as cruelty, desertion, or mutual consent. A petition must be filed in the family court with proper documents and witness statements."
+    "text": "Either spouse may file for divorce on grounds such as cruelty, desertion, or mutual consent. A petition must be filed in family court with proper documents and witnesses. Legal Services Authority helpline: 1516."
   },
   {
     "title": "Child Labour",
     "source": "Child Labour (Prohibition and Regulation) Act, 1986",
-    "text": "Employment of children below 14 years in hazardous occupations is prohibited. Violations can be reported to the Labour Department or Childline (1098)."
+    "text": "Employment of children below 14 years in hazardous occupations is prohibited. Violations can be reported to the Labour Department or Childline. Childline emergency helpline: 1098."
   },
   {
     "title": "Sexual Harassment at Workplace",
     "source": "POSH Act, 2013",
-    "text": "Every workplace with more than 10 employees must have an Internal Complaints Committee. Victims can file a complaint within 3 months of the incident. Non-compliance can be penalized."
+    "text": "Every workplace with more than 10 employees must have an Internal Complaints Committee. Victims can file a complaint within 3 months of the incident. Non-compliance can be penalized. Women Helpline: 181."
+  },
+  {
+    "title": "SC/ST Atrocities Protection",
+    "source": "SC/ST (Prevention of Atrocities) Act, 1989",
+    "text": "Any act of caste-based violence, humiliation, or discrimination is punishable under this Act. Victims can approach the police and demand FIR registration under relevant SC/ST sections. SC/ST Helpline: 1800-1800-214."
+  },
+  {
+    "title": "Lok Adalat - Free Dispute Resolution",
+    "source": "Legal Services Authorities Act, 1987",
+    "text": "Lok Adalats provide free and speedy settlement of disputes like family conflicts, property issues, and cheque bounce cases. Awards passed are binding and enforceable. For details, contact State/District Legal Services Authority. Helpline: 1516."
+  },
+  {
+    "title": "Emergency Helplines (India)",
+    "source": "Government of India",
+    "text": "Police: 100 | Ambulance: 108 | Fire: 101 | Women Helpline: 181 | Childline: 1098 | Cybercrime: 1930 | Consumer Helpline: 1800-11-4000 | Labour Helpline: 155214 | Legal Aid: 1516 | SC/ST Protection: 1800-1800-214."
   }
 ]
