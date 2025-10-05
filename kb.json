@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ipc_406",
+    "title": "Section 406 - Criminal breach of trust",
+    "text": "Whoever commits criminal breach of trust shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+    "source": "Indian Penal Code, Section 406"
+  },
+  {
+    "id": "consumer_refund",
+    "title": "Consumer Right - Refund for defective goods",
+    "text": "If a product is found defective, the consumer has a right to seek replacement or refund under the Consumer Protection Act. They may approach the district consumer forum with evidence and purchase proof.",
+    "source": "Consumer Protection Act - FAQ"
+  },
+  {
+    "id": "itact_cyberfraud",
+    "title": "IT Act - Cyber Fraud guidance",
+    "text": "Unauthorized access or fraudulent transactions using computers/mobile devices may constitute offences under the Information Technology Act. Victims should retain transaction logs and file an FIR at the nearest police station and a complaint with the cyber cell.",
+    "source": "Information Technology Act - Guidance"
+  },
+  {
+    "id": "tenancy_deposit",
+    "title": "Tenant Deposit Rights (General)",
+    "text": "A tenant is generally entitled to the refund of the security deposit at the end of tenancy if there is no damage beyond normal wear and tear. Landlords should provide an itemized deduction statement if they withhold any amount.",
+    "source": "Common Tenancy Practices - Civil Guidance"
+  },
+  {
+    "id": "domestic_violence",
+    "title": "Protection from Domestic Violence (summary)",
+    "text": "Victims of domestic violence can seek protection orders, temporary custody, and maintenance under the Protection of Women from Domestic Violence Act. They should approach the nearest police station and women's help-cell for immediate support.",
+    "source": "Protection of Women from Domestic Violence Act - Summary"
+  },
+  {
+    "id": "dowry_section",
+    "title": "Dowry Prohibition and Dowry Harassment",
+    "text": "Dowry demands and harassment for dowry are offences under the Indian Penal Code and Dowry Prohibition Act. Victims may file an FIR and seek legal aid and protection orders.",
+    "source": "IPC & Dowry Prohibition Act - Guidance"
+  },
+  {
+    "id": "workplace_harassment",
+    "title": "Workplace Sexual Harassment - Basic steps",
+    "text": "Employees facing sexual harassment may complain internally per POSH Act procedures and may approach Internal Complaints Committee (ICC). In severe cases, they may approach police and seek legal remedies.",
+    "source": "POSH Act Guidance"
+  },
+  {
+    "id": "rti_basic",
+    "title": "Right to Information - Basic use",
+    "text": "Citizens can file RTI applications to request information from public authorities. RTI usually requires specifying the information sought and paying a small fee where applicable.",
+    "source": "RTI Act - FAQ"
+  },
+  {
+    "id": "consumer_service_defect",
+    "title": "Consumer Service Complaint - Services",
+    "text": "If a service is rendered poorly (banking, telecom), a consumer can file a complaint with the consumer forum outlining deficiency of service, with proof such as transaction records or communication logs.",
+    "source": "Consumer Protection - Services"
+  },
+  {
+    "id": "cyberbullying",
+    "title": "Cyberbullying & Online Harassment",
+    "text": "Online harassment and cyberbullying may be reported under the IT Act and relevant IPC sections. Preserve screenshots and report to the platform and police cyber cell.",
+    "source": "IT Act & IPC Guidance"
+  }
+]
