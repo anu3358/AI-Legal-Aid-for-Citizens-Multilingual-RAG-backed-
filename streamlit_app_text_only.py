@@ -22,19 +22,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Header ---
 st.markdown('<div class="header"><h1>⚖️ Nyāy Buddy — Legal Aid Assistant (Text Demo)</h1></div>', unsafe_allow_html=True)
 st.write("")
-
-# --- Sidebar ---
-with st.sidebar.container():
-    st.markdown("### Project Info")
-    st.markdown("- B.Tech CSE Project\n- Punjabi University, Patiala\n- Multilingual RAG-backed legal assistant")
-    st.markdown("### Deployment")
-    st.markdown("- Streamlit Cloud: Text-only demo (fast & stable)")
-    st.markdown("- Hugging Face Spaces: Full demo (voice + ASR)")
-    st.markdown("### Tips")
-    st.markdown("Use short, clear questions. Example: *Mera landlord deposit wapas nahi kar raha*")
 
 # --- Load KB ---
 KB_PATH = "kb.json"
@@ -56,7 +45,7 @@ def get_generator():
 
 generator = get_generator()
 
-# --- Build index (embedder inside cache to avoid unhashable param error) ---
+# --- Build index ---
 @st.cache_resource(show_spinner=False)
 def build_index(texts):
     model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -89,7 +78,14 @@ def generate_answer(query, contexts, user_lang="en"):
 
     Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
     """)
-    out = generator(prompt, max_length=200, do_sample=False)[0]["generated_text"]
+
+    try:
+        out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"].strip()
+    except Exception:
+        out = ""
+
+    if not out:
+        out = "Please consult a lawyer or legal aid. I could not find a clear answer."
 
     if user_lang != "en":
         try:
