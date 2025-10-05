@@ -1,5 +1,5 @@
 # ⚖️ Nyāy Buddy — AI Legal Aid Assistant
-
+(( POWERED BY ->RAG))
 **Nyāy Buddy** is a multilingual AI-powered legal assistant that helps Indian citizens understand their legal rights in **simple language** (Hindi, Punjabi, English).  
 It uses **Retrieval-Augmented Generation (RAG)** with legal documents + AI models, and provides **text and audio answers**.
 
