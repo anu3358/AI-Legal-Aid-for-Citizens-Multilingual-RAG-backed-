@@ -77,12 +77,13 @@ def generate_answer(query, contexts, user_lang="en"):
 
     User question: {query}
 
-    Answer instructions:
-    - Start with a short 2–3 sentence plain explanation of the law.
-    - Then give a numbered step-by-step list of clear actions (at least 3 steps).
-    - Mention helpline numbers or official websites if available.
-    - If unsure, say 'Please consult a lawyer or legal aid service.'
-    Ensure the answer is complete, not just "1." — always give full sentences.
+    Answer clearly with:
+    - A short 2–3 sentence plain explanation of the law.
+    - A numbered step-by-step list (at least 3 clear steps).
+    - Include helpline numbers and official websites ONLY if present in the context.
+    - If unsure, simply say: "Please consult a lawyer or legal aid service."
+
+    Do not repeat sentences. Do not invent contact numbers. Use only those provided in the context documents.
     """)
     out = generator(
         prompt,
