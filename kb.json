@@ -2,71 +2,71 @@
   {
     "title": "Tenant Deposit Rights (General)",
     "source": "Common Tenancy Practices - Civil Guidance",
-    "text": "A tenant is entitled to the refund of the security deposit at the end of tenancy if there is no damage beyond normal wear and tear. Landlords must provide an itemized deduction statement if they withhold any amount. For tenancy disputes, approach the local Rent Controller office."
+    "text": "Tenants are entitled to receive their security deposit back if there is no damage beyond normal wear and tear. Steps: (1) Request the landlord for deposit refund in writing, (2) Ask for an itemized deduction list if any money is withheld, (3) If not resolved, file a complaint at the local Rent Controller office. Emergency: Police Helpline 100."
   },
   {
     "title": "Consumer Right - Refund for Defective Goods",
-    "source": "Consumer Protection Act - FAQ",
-    "text": "If a product is found defective, the consumer has a right to seek replacement or refund under the Consumer Protection Act. They may approach the district consumer forum with evidence and purchase proof. National Consumer Helpline: 1800-11-4000."
+    "source": "Consumer Protection Act, 2019",
+    "text": "Consumers can demand refund or replacement for defective goods. Steps: (1) Contact the shop/website and keep invoice copy, (2) If unresolved, file complaint at District Consumer Forum, (3) Call National Consumer Helpline at 1800-11-4000. Online complaint: consumerhelpline.gov.in."
   },
   {
-    "title": "IT Act - Cyber Fraud Guidance",
-    "source": "Information Technology Act - Guidance",
-    "text": "Fraudulent transactions using computers or mobile devices may constitute offences under the IT Act. Victims should retain transaction logs and file an FIR at the nearest police station and a complaint with the cyber cell. National Cyber Crime Helpline: 1930."
+    "title": "Cyber Fraud - Online Banking Scam",
+    "source": "Information Technology Act, 2000",
+    "text": "Online fraud is a punishable offence under the IT Act. Steps: (1) Call National Cybercrime Helpline 1930 immediately, (2) File complaint on cybercrime.gov.in, (3) Lodge FIR at nearest police station or cyber cell, (4) Keep SMS, bank statements, and transaction details as evidence."
   },
   {
     "title": "Delayed Salary - Labour Law",
     "source": "Payment of Wages Act, 1936",
-    "text": "Employers must pay wages on time, before the 7th or 10th of the following month depending on establishment size. If salary is not paid, employees can file a claim with the Labour Commissioner or approach the Labour Court. Labour Helpline: 155214."
+    "text": "Employees must receive wages before 7th or 10th of the next month. Steps: (1) Write complaint to employer in writing/email, (2) If unresolved, file a claim with Labour Commissioner, (3) Approach Labour Court for legal remedy. Helpline: 155214."
   },
   {
-    "title": "Minimum Wages",
+    "title": "Minimum Wages Protection",
     "source": "Minimum Wages Act, 1948",
-    "text": "Workers are entitled to wages not less than government-fixed minimum rates. Complaints about underpayment can be filed with the Labour Commissioner. Labour Helpline: 155214."
+    "text": "Every worker must be paid at least the government-declared minimum wage. Steps: (1) Check state notification for rates, (2) If underpaid, approach Labour Commissioner, (3) Call Labour Helpline 155214 for assistance."
   },
   {
     "title": "Right to Information",
     "source": "RTI Act, 2005",
-    "text": "Any citizen may file an RTI application to seek information from government departments. Applications can be submitted in writing, online, or via post, and departments must respond within 30 days. RTI Online Portal: https://rtionline.gov.in/"
+    "text": "Any citizen may seek information from government offices. Steps: (1) Draft a simple RTI application (mention name, address, question, Rs. 10 fee), (2) Send to Public Information Officer of department, (3) If no reply within 30 days, appeal to First Appellate Authority. Online portal: rtionline.gov.in."
   },
   {
     "title": "Domestic Violence Protection",
     "source": "Protection of Women from Domestic Violence Act, 2005",
-    "text": "Victims of domestic violence can seek protection orders, residence orders, and monetary relief by approaching the Magistrate. Free legal aid is available through District Legal Services Authorities. Women Helpline (24x7): 181."
+    "text": "Victims can get legal and police protection. Steps: (1) Call Women Helpline 181 or Police 100, (2) Approach Protection Officer/District Legal Services Authority, (3) File complaint in Magistrate Court for protection, residence, or monetary relief. Free legal aid available."
   },
   {
-    "title": "Dowry Prohibition",
+    "title": "Dowry Harassment",
     "source": "Dowry Prohibition Act, 1961",
-    "text": "Giving or taking dowry is a punishable offence. Complaints can be made to the police or Women’s Cell. Dowry harassment may also be prosecuted under Section 498A IPC. Police Women Helpline: 1091."
+    "text": "Dowry harassment is a crime. Steps: (1) Call Police Women Helpline 1091, (2) File FIR under Dowry Act and Section 498A IPC, (3) Seek help from District Women’s Cell or NCW helpline 7827170170."
   },
   {
     "title": "Marriage and Divorce",
     "source": "Hindu Marriage Act, 1955",
-    "text": "Either spouse may file for divorce on grounds such as cruelty, desertion, or mutual consent. A petition must be filed in family court with proper documents and witnesses. Legal Services Authority helpline: 1516."
+    "text": "Either spouse may file for divorce. Steps: (1) Collect marriage proof and ID, (2) File petition in Family Court citing grounds (mutual consent, cruelty, desertion etc.), (3) Attend hearings, (4) Court grants decree. Legal Aid Helpline: 1516."
   },
   {
     "title": "Child Labour",
     "source": "Child Labour (Prohibition and Regulation) Act, 1986",
-    "text": "Employment of children below 14 years in hazardous occupations is prohibited. Violations can be reported to the Labour Department or Childline. Childline emergency helpline: 1098."
+    "text": "Child labour under 14 in hazardous work is illegal. Steps: (1) Report case immediately to Childline 1098, (2) Inform District Labour Office, (3) Rescue and rehabilitation arranged by authorities."
   },
   {
-    "title": "Sexual Harassment at Workplace",
+    "title": "Workplace Sexual Harassment",
     "source": "POSH Act, 2013",
-    "text": "Every workplace with more than 10 employees must have an Internal Complaints Committee. Victims can file a complaint within 3 months of the incident. Non-compliance can be penalized. Women Helpline: 181."
+    "text": "Sexual harassment at workplace is illegal. Steps: (1) File complaint with Internal Complaints Committee within 3 months, (2) If no ICC, complain to District Officer, (3) Call Women Helpline 181 for immediate support."
   },
   {
     "title": "SC/ST Atrocities Protection",
     "source": "SC/ST (Prevention of Atrocities) Act, 1989",
-    "text": "Any act of caste-based violence, humiliation, or discrimination is punishable under this Act. Victims can approach the police and demand FIR registration under relevant SC/ST sections. SC/ST Helpline: 1800-1800-214."
+    "text": "Discrimination or violence against SC/ST is a punishable offence. Steps: (1) File FIR immediately at police station, (2) Demand FIR under SC/ST Act sections, (3) Contact SC/ST helpline 1800-1800-214, (4) Free legal aid through District Legal Services Authority."
   },
   {
     "title": "Lok Adalat - Free Dispute Resolution",
     "source": "Legal Services Authorities Act, 1987",
-    "text": "Lok Adalats provide free and speedy settlement of disputes like family conflicts, property issues, and cheque bounce cases. Awards passed are binding and enforceable. For details, contact State/District Legal Services Authority. Helpline: 1516."
+    "text": "Lok Adalat provides free settlement of disputes like family, property, and cheque bounce cases. Steps: (1) Approach District/State Legal Services Authority, (2) Submit dispute details, (3) Attend Lok Adalat session for compromise, (4) Award is final and binding. Legal Aid Helpline: 1516."
   },
   {
     "title": "Emergency Helplines (India)",
     "source": "Government of India",
-    "text": "Police: 100 | Ambulance: 108 | Fire: 101 | Women Helpline: 181 | Childline: 1098 | Cybercrime: 1930 | Consumer Helpline: 1800-11-4000 | Labour Helpline: 155214 | Legal Aid: 1516 | SC/ST Protection: 1800-1800-214."
+    "text": "Police 100 | Ambulance 108 | Fire 101 | Women Helpline 181 | Childline 1098 | Cybercrime 1930 | Consumer 1800-11-4000 | Labour 155214 | Legal Aid 1516 | SC/ST 1800-1800-214."
   }
 ]
