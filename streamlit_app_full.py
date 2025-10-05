@@ -58,7 +58,7 @@ texts = [d["text"] for d in KB]
 index, kb_embeddings, embed_model = build_index(texts)
 
 # --- Retrieval & Generation ---
-def retrieve(query, k=3):
+def retrieve(query, k=1):
     q_emb = embed_model.encode([query], convert_to_numpy=True)
     D, I = index.search(q_emb, k)
     results = []
@@ -69,13 +69,19 @@ def retrieve(query, k=3):
 
 def generate_answer(query, contexts, user_lang="en"):
     contexts_txt = "\n\n".join([f"Source: {c['source']}\nText: {c['text']}" for c in contexts])
-    prompt = textwrap.dedent(f"""You are an assistant that explains Indian legal texts in simple, short sentences for a common person.
-    Context documents:
+    prompt = textwrap.dedent(f"""
+    You are Nyāy Buddy, an AI assistant that explains Indian legal rights in plain, simple language.
+
+    Context documents (use ONLY these, do not mix with unrelated topics):
     {contexts_txt}
 
     User question: {query}
 
-    Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
+    Answer instructions:
+    1. Explain the law in 2–3 sentences.
+    2. Provide a single clear step-by-step list (no repetition).
+    3. Mention helpline numbers or official websites if available.
+    4. If unsure, say 'Please consult a lawyer or legal aid service.'
     """)
     out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"]
 
@@ -116,7 +122,7 @@ if mode == "Text":
 
             user_lang = "en" if q == q_en else "hi" if any(c in q for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
 
-            docs = retrieve(q_en, k=3)
+            docs = retrieve(q_en, k=1)
             st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
             for d in docs:
                 st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
@@ -159,9 +165,9 @@ else:
                 except Exception:
                     q_en, user_lang = query_text, "en"
 
-                user_lang = "en" if query_text == q_en else "hi" if any(c in query_text for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
+                user_lang = "en" if query_text == q_en else "hi" if any(c in query_text for c in "अआइईउऊएऐਓऔਕਖਗਘਚਛਜਝਟਠਡਢਤਥਦਧਨਪਫਬਭਮਯਰਲਵਸ਼ਸਹ") else "pa"
 
-                docs = retrieve(q_en, k=3)
+                docs = retrieve(q_en, k=1)
                 st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
                 for d in docs:
                     st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
