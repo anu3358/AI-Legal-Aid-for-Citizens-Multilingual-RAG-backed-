@@ -1,142 +1,165 @@
-# streamlit_app_full.py
 import streamlit as st
-from sentence_transformers import SentenceTransformer
 import faiss
-import numpy as np
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+import torch
+import textwrap
+import json
+import os
+from transformers import pipeline
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-import tempfile, os, uuid, json, textwrap
 
-st.set_page_config(page_title="Nyāy Buddy — Full Demo", layout="wide", initial_sidebar_state="collapsed")
+# ---------------------------
+# Load Knowledge Base
+# ---------------------------
+@st.cache_resource
+def load_kb(kb_file="kb.json"):
+    with open(kb_file, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-st.markdown("""
-<style>
-.header {background: linear-gradient(90deg,#053e57,#0f172a); padding:14px; border-radius:8px;}
-.header h1{color: #fff; margin:0; font-size:26px;}
-.card {background:#ffffff; padding:12px; border-radius:8px; box-shadow: 0 2px 6px rgba(15,23,42,0.06);}
-.source {font-size:12px; color:#444; background:#f3f4f6; padding:8px; border-radius:6px;}
-.bot-bubble {background:#f1f5f9; padding:10px; border-radius:10px; display:inline-block;}
-small{font-size:13px; color:#666;}
-</style>
-""", unsafe_allow_html=True)
+KB = load_kb()
 
-st.markdown('<div class="header"><h1>⚖️ Nyāy Buddy — Full Demo (Text + Audio)</h1></div>', unsafe_allow_html=True)
-st.write("")
+# ---------------------------
+# Embedding + FAISS Index
+# ---------------------------
+from sentence_transformers import SentenceTransformer
 
-# Load KB
-KB_PATH = "kb.json"
-if not os.path.exists(KB_PATH):
-    st.error("kb.json not found. Please upload your KB file named kb.json in the project root.")
-    st.stop()
+@st.cache_resource
+def build_index(texts, embed_model):
+    embeddings = embed_model.encode(texts, convert_to_tensor=False, normalize_embeddings=True)
+    dim = embeddings.shape[1]
+    index = faiss.IndexFlatIP(dim)
+    index.add(embeddings)
+    return index, embeddings
 
-with open(KB_PATH, "r", encoding="utf-8") as f:
-    KB = json.load(f)
-
-# --- Generator (cached) ---
-@st.cache_resource(show_spinner=False)
-def get_generator():
-    model_name = "google/flan-t5-small"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-    gen = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=-1)
-    return gen
-
-generator = get_generator()
-
-# --- Build index ---
-@st.cache_resource(show_spinner=False)
-def build_index(texts):
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    embs = model.encode(texts, convert_to_numpy=True)
-    d = embs.shape[1]
-    index = faiss.IndexFlatL2(d)
-    index.add(embs)
-    return index, embs, model
-
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 texts = [d["text"] for d in KB]
-index, kb_embeddings, embed_model = build_index(texts)
+index, kb_embeddings = build_index(texts, embed_model)
 
-# --- Retrieval & Generation ---
-def retrieve(query, k=3):
-    q_emb = embed_model.encode([query], convert_to_numpy=True)
-    D, I = index.search(q_emb, k)
-    results = []
-    for idx in I[0]:
-        if idx < len(KB):
-            results.append(KB[idx])
-    return results
+# ---------------------------
+# QA Model
+# ---------------------------
+@st.cache_resource
+def load_generator():
+    return pipeline("text2text-generation", model="google/flan-t5-small")
 
-def generate_answer(query, contexts, user_lang="en"):
-    contexts_txt = "\n\n".join([f"Source: {c['source']}\nText: {c['text']}" for c in contexts])
-    prompt = textwrap.dedent(f"""You are an assistant that explains Indian legal texts in simple, short sentences for a common person.
+generator = load_generator()
+
+# ---------------------------
+# Cleaner for Answers
+# ---------------------------
+def clean_answer(ans: str) -> str:
+    """
+    Clean model output:
+    - Remove duplicate lines
+    - Remove duplicate step blocks
+    - Keep only one 'Example:' section
+    """
+    parts = [p.strip() for p in ans.split("\n") if p.strip()]
+    cleaned = []
+    seen = set()
+    example_seen = False
+
+    for p in parts:
+        norm = p.lower().replace("  ", " ")
+        if norm.startswith("example:"):
+            if example_seen:
+                continue
+            example_seen = True
+        if norm not in seen:
+            cleaned.append(p)
+            seen.add(norm)
+
+    return "\n".join(cleaned)
+
+# ---------------------------
+# Answer Generation
+# ---------------------------
+def generate_answer(query: str, contexts: list, generator, max_len: int = 400) -> str:
+    """Generate structured legal answers with repetition control."""
+    contexts_txt = "\n".join([c["text"] for c in contexts])
+
+    prompt = textwrap.dedent(f"""
+    You are Nyāy Buddy, an AI assistant that explains Indian legal rights in plain, simple language.
+
     Context documents:
     {contexts_txt}
 
     User question: {query}
 
-    Task: Give a short plain-language answer (2-6 sentences), list step-by-step actions the user can take, and mention the source titles used. If unsure, say 'Please consult a lawyer or legal aid'.
+    Answer instructions:
+    1. Explain the law in 2–3 sentences.
+    2. Provide a single clear step-by-step list (only once, no repetition).
+    3. Mention relevant helpline numbers.
+    4. Add at most one example case if available.
+    5. If unsure, say 'Please consult a lawyer or legal aid service.'
+    Answer in full sentences, not one-liners.
     """)
 
+    raw_out = generator(
+        prompt,
+        max_length=max_len,
+        do_sample=True,
+        top_p=0.9,
+        temperature=0.7,
+        repetition_penalty=1.2
+    )[0]["generated_text"].strip()
+
+    return clean_answer(raw_out)
+
+# ---------------------------
+# Translator
+# ---------------------------
+def translate_text(text, src="auto", tgt="en"):
     try:
-        out = generator(prompt, max_length=250, do_sample=False)[0]["generated_text"].strip()
-    except Exception:
-        out = ""
+        return GoogleTranslator(source=src, target=tgt).translate(text)
+    except:
+        return text
 
-    if not out:
-        out = "Please consult a lawyer or legal aid. I could not find a clear answer."
+# ---------------------------
+# Streamlit UI
+# ---------------------------
+st.set_page_config(page_title="⚖️ Nyāy Buddy", page_icon="⚖️", layout="wide")
 
-    if user_lang != "en":
-        try:
-            return GoogleTranslator(source="en", target=user_lang).translate(out)
-        except Exception:
-            return out
-    return out
+st.title("⚖️ Nyāy Buddy — AI Legal Aid for Citizens")
+st.write("Ask legal questions in Hindi, Punjabi, or English. Get plain answers + helpline numbers.")
 
-def tts_bytes(text, lang='en'):
-    if not text or not text.strip():
-        return None  # avoid sending empty text to gTTS
-    try:
-        tts = gTTS(text=text, lang=lang)
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tf:
-            tts.save(tf.name)
-            with open(tf.name, "rb") as f:
-                data = f.read()
-        os.remove(tf.name)
-        return data
-    except Exception as e:
-        st.warning("TTS error: " + str(e))
-        return None
-
-# --- UI ---
-mode = st.radio("Mode", ("Text", "Audio upload"))
+mode = st.radio("Mode", ["Text", "Audio upload"])
 
 if mode == "Text":
-    with st.form("text_form"):
-        q = st.text_area("Type your legal question (Hindi/Punjabi/English)", height=140)
-        submitted = st.form_submit_button("Ask Nyāy Buddy")
-    if submitted and q.strip():
-        with st.spinner("Processing..."):
+    user_q = st.text_input("Type your legal question (Hindi/Punjabi/English)")
+
+    if user_q:
+        # Translate to English for processing
+        q_en = translate_text(user_q, src="auto", tgt="en")
+
+        # Search in KB
+        q_emb = embed_model.encode([q_en], convert_to_tensor=False, normalize_embeddings=True)
+        scores, idxs = index.search(q_emb, 2)  # top-2 matches
+        retrieved = [KB[i] for i in idxs[0]]
+
+        # Generate Answer
+        answer = generate_answer(q_en, retrieved, generator)
+
+        # Translate back if needed
+        answer_out = translate_text(answer, src="en", tgt="auto")
+
+        # Show sources
+        st.subheader("🔎 Sources retrieved")
+        for d in retrieved:
+            st.markdown(f"**{d['title']}** — {d['source']}")
+
+        st.subheader("🗨️ Nyāy Buddy Answer")
+        st.write(answer_out)
+
+        # Optional TTS
+        if st.checkbox("🔊 Listen Answer (gTTS)"):
             try:
-                q_en = GoogleTranslator(source="auto", target="en").translate(q)
-            except Exception:
-                q_en, user_lang = q, "en"
+                tts = gTTS(answer_out, lang="hi")  # auto lang detection may fail, forcing Hindi
+                tts.save("answer.mp3")
+                audio_file = open("answer.mp3", "rb")
+                st.audio(audio_file.read(), format="audio/mp3")
+            except:
+                st.error("⚠️ TTS Error. Please try text only mode.")
 
-            user_lang = "en" if q == q_en else "hi" if any(c in q for c in "अआइईउऊएऐओऔकखगघचछजझटठडढतथदधनपफबभमयरलवशषसह") else "pa"
-
-            docs = retrieve(q_en, k=3)
-            st.markdown('<div class="card">### 🔎 Sources retrieved</div>', unsafe_allow_html=True)
-            for d in docs:
-                st.markdown(f"**{d['title']}** — <small>{d['source']}</small>", unsafe_allow_html=True)
-                st.markdown(f"<div class='source'>{d['text']}</div>", unsafe_allow_html=True)
-
-            ans = generate_answer(q_en, docs, user_lang=user_lang)
-            st.markdown('<div class="card"><h3>🗨️ Nyāy Buddy Answer</h3></div>', unsafe_allow_html=True)
-            st.markdown(f"<div class='bot-bubble'>{ans}</div>", unsafe_allow_html=True)
-
-            lang_code = 'hi' if user_lang == 'hi' else ('pa' if user_lang == 'pa' else 'en')
-            audio = tts_bytes(ans, lang=lang_code)
-            if audio:
-                st.audio(audio, format='audio/mp3')
-
-            st.info("Disclaimer: Informational only. Consult a qualified lawyer.")
+elif mode == "Audio upload":
+    st.info("🎤 Upload audio questions not enabled in this demo.")
