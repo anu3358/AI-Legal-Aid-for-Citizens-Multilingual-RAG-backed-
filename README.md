@@ -26,7 +26,7 @@ Check out the live deployed app here:
 
 🏆 Author & Contributions
 
-👤 ANURAG SAINI
+👤 ANURAG SAINI 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 B.Tech CSE, Punjabi University, Patiala
 
 Specialized Work by Me:
@@ -152,7 +152,7 @@ LLM (Flan-T5) → Generates plain-language explanation & step-by-step actions
 
 Answer Output → Text + (optional) Speech using gTTS
 
-⚠️ Disclaimer
+⚠️ Disclaimer 🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
 
 This tool is for educational and informational purposes only.
 It is not a substitute for professional legal advice.
